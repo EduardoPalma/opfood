@@ -1,20 +1,42 @@
+from contextlib import asynccontextmanager
+from typing import List
+
+from fastapi import FastAPI
+from db_mongo.models_mongo import Food, NutrientFood # no deberia estar
+from db_mongo.mongodb import MongoClient
+from db_mongo.repository import FoodRepository # archivo llamado API
+from dto.dtos import FoodDto
+
+data_food: List[FoodDto] = []
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    client_mongo = MongoClient()
+    await client_mongo.init_models([Food, NutrientFood])
+
+    global data_food
+    data_food.extend(await food_repository.all_food())
+    yield
 
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+app = FastAPI(lifespan=lifespan)
+food_repository = FoodRepository()
 
-from database.models import Ingredient, NutritionalValue, IngredientMeasure
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
-# Conexión a la base de datos
-DATABASE_URL = "postgresql://nutrifoods_dev:MVmYneLqe91$@ep-still-truth-a4eitqn3.us-east-1.aws.neon.tech/NutrifoodsDB?sslmode=require"
-engine = create_engine(DATABASE_URL)
+@app.get("/food/meal_plan")
+async def get_food_meal_plan():
+    food_item = await Food.get(id)
+    await food_item.fetch_link(Food.nutrients)
+    if food_item:
+        return food_item  # Retorna el documento convertido a diccionario
+    else:
+        return {"error": "Food not found"}
 
-# Crear la sesión
-Session = sessionmaker(bind=engine)
-session = Session()
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    foods = session.query(Ingredient, IngredientMeasure).join(IngredientMeasure).limit(6).all()
-    for ingredient, measure in foods:
-        print(ingredient.name, measure.name)
+@app.get("/recipe/meal_plan")
+async def get_recipe_meal_plan():
+    print(len(data_food))
+    return {"hi" : "hola"}

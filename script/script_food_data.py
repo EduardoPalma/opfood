@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from pathlib import Path
 import json
 from pymongo.synchronous.database import Database
-from database.translate import Translate
+from script.translate import Translate
 
 
 def read_json_food_data_central(path_file: str):
