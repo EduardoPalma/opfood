@@ -1,7 +1,9 @@
 from typing import List
-from db_mongo.interface import IFoodRepository
+
+from api.dto.dtos import FoodDto, FoodPortions, NutrientFood
+from api.interface import IFoodRepository
 from db_mongo.models_mongo import Food
-from dto.dtos import FoodDto, FoodPortions, NutrientFood
+
 
 
 class FoodRepository(IFoodRepository):
