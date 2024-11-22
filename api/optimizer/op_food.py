@@ -5,10 +5,12 @@ from api.interface import SelectionStrategy, CrossoverStrategy, MutationStrategy
 
 
 class Food:
-    def __init__(self, category: FoodCategory, amount: float, grams: float, nutrients):
+    def __init__(self, category: FoodCategory, amount: float, grams: float, unit: str,
+                 nutrients: List[float]):
         self.category = category
         self.amount = amount
         self.grams = grams
+        self.unit = unit
         self.nutrients: List[float] = nutrients
 
 
@@ -37,7 +39,6 @@ class OptimizerFood:
         pass
 
     def _generated_population(self):
-
         pass
 
     def _selection(self):
