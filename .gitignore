@@ -154,4 +154,4 @@ poetry.toml
 .ruff_cache/
 pyrightconfig.json
 .idea
-
+/files_utils/FoodData_Central_sr_legacy_food_json_2021-10-28.json
